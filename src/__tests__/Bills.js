@@ -29,7 +29,6 @@ describe("Given I am connected as an employee", () => {
       window.onNavigate(ROUTES_PATH.Bills)
       await waitFor(() => screen.getByTestId('icon-window'))
       const windowIcon = screen.getByTestId('icon-window')
-
       expect(windowIcon).toHaveClass('active-icon');
     });
 
@@ -42,14 +41,16 @@ describe("Given I am connected as an employee", () => {
       expect(dates).toEqual(datesSorted)
     })
 
-    // Vérifie que le titre et le bouton sont bien affichés
+    // On vérifie que le titre et le bouton sont bien affichés
     test('Then title and button should be displayed', () => {
       document.body.innerHTML = BillsUI({ data: [] })
-      expect(screen.getAllByText("Mes notes de frais")).toBeTruthy()
-      expect(screen.getByTestId("btn-new-bill")).toBeTruthy()
+      // Pour le titre
+      expect(screen.getByText("Mes notes de frais")).toBeInTheDocument()
+      // Pour le bouton
+      expect(screen.getByTestId("btn-new-bill")).toBeInTheDocument()
     });
 
-    // Vérifie que le formulaire de création de note de frais s'affiche bien
+    // On vérifie que le formulaire de création de note de frais s'affiche bien
     describe('When I click on "Nouvelle note de frais"', () => {
       test('Then the form to create a new invoice should appear', () => {
         const onNavigate = (pathname) => {
@@ -75,7 +76,7 @@ describe("Given I am connected as an employee", () => {
       });
     });
 
-    // Vérifie si la modale contenant le justificatif de la note de frais apparaît
+    // On vérifie si la modale contenant le justificatif de la note de frais apparaît
     describe('When I click on the icon eye', () => {
       test('Then a modal should appear', () => {
         const onNavigate = (pathname) => {
@@ -110,7 +111,7 @@ describe("Given I am connected as an employee", () => {
   })
 });
 
-// Test Bills.js
+// GET Bills.js
 describe("Given I am a user connected as Employee", () => {
   describe("When fetch bills from API fail", () => {
     beforeEach(() => {
