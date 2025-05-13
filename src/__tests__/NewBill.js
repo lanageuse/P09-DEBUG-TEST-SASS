@@ -32,6 +32,22 @@ describe("Given I am connected as an employee", () => {
             expect(handleChange).toHaveBeenCalled();
             expect(inputFile.files[0].name).toBe('test.png');
         });
+        // Vérifie que le message d'erreur est affiché lorsque le format n'est pas valide
+        test("Then it should show error message if file format is invalid", () => {
+            const newBill = new NewBill({ document, onNavigate: {}, store: mockStore, localStorage: {} });
+            const handleChange = jest.fn((e) => newBill.handleChangeFile(e));
+            const inputFile = screen.getByTestId('file');
+            const erroMessage = screen.getByTestId('error-message')
+            inputFile.addEventListener('change', handleChange);
+            fireEvent.change(inputFile, {
+                target: {
+                    files: [new File(['test'], 'test.png', { type: 'image/gif' })]
+                }
+            });
+            expect(handleChange).toHaveBeenCalled();
+            expect(inputFile.value).toBe('');
+            expect(erroMessage.textContent).toBe("Format de fichier invalide. Seuls les fichiers JPG, JPEG ou PNG sont autorisés.")
+        });
         // Test intégration POST 
         // Vérifie que la nouvelle note de frais peut être envoyée
         describe('When I am on NewBill Page, i fill the form and i click submit', () => {
@@ -57,7 +73,7 @@ describe("Given I am connected as an employee", () => {
                 fireEvent.change(vatInput, { target: { value: '120' } });
                 fireEvent.change(pctInput, { target: { value: '20' } });
                 fireEvent.change(commentaryInput, { target: { value: 'RDZ prise de contact et présentation du projet' } });
-                fireEvent.change(file, { target: { files: [ new File(["test"], "test.jpg", { type: "image/jpg" }) ] } });
+                fireEvent.change(file, { target: { files: [new File(["test"], "test.jpg", { type: "image/jpg" })] } });
 
                 const newBillForm = screen.getByTestId("form-new-bill");
                 const handleSubmit = jest.fn((e) => newBill.handleSubmit(e))
